@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador de fichas · Royale Cordonets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%9F%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">🧦</div>
+  <div class="brand">
+    <b>Royale Cordonets</b>
+    <span>Generador de fichas de producto · barefoot talla 16-27</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="pill">Gandia · calzado respetuoso</span>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="card">
+      <h1>Sube la foto y sale la ficha hecha ✨</h1>
+      <p>Analizo el color real de la zapatilla, le pongo nombre, escribo la descripción para las mamás y papás,
+        monto la tabla de tallas 16-27 en centímetros y saco 3 beneficios. Tú solo revisas y copias.</p>
+
+      <div class="drop" id="drop">
+        <span class="emoji">📸</span>
+        <b>Arrastra aquí la foto de la zapatilla</b>
+        <small>o pulsa para elegirla · mejor fondo blanco o liso</small>
+        <input type="file" id="file" accept="image/*">
+      </div>
+
+      <div class="botones">
+        <button class="btn primario" id="btnGenerar" disabled>Generar ficha</button>
+        <button class="btn crema" id="btnEjemplo">Ver con foto de ejemplo</button>
+        <button class="btn ghost" id="btnOtra" disabled>Otra versión del texto</button>
+        <button class="btn ghost" id="btnLimpiar" disabled>Empezar con otra foto</button>
+      </div>
+
+      <div class="cargando" id="cargando"><span class="spin"></span><span>Analizando la foto…</span></div>
+      <div class="aviso" id="aviso"></div>
+    </div>
+
+    <div class="card muestra">
+      <img id="preview" alt="Vista previa de la zapatilla">
+      <div class="vacio" id="vacio">Aquí verás la foto que subas<br><small>y la paleta de colores que detecto</small></div>
+      <div class="tonos" id="tonos"></div>
+    </div>
+  </section>
+
+  <div class="aviso" id="avisoFicha"></div>
+
+  <section class="grid" id="resultado" style="display:none">
+
+    <!-- ---------- Editor ---------- -->
+    <div class="card">
+      <h3 style="font-size:19px;margin-bottom:16px">Ficha editable</h3>
+
+      <label class="campo"><span>Nombre del modelo</span>
+        <input type="text" id="fNombre"></label>
+
+      <label class="campo"><span>Subtítulo</span>
+        <input type="text" id="fSubtitulo"></label>
+
+      <label class="campo"><span>Descripción para padres</span>
+        <textarea id="fDescripcion" style="min-height:220px"></textarea></label>
+
+      <label class="campo"><span>Tipo de calzado</span>
+        <select id="fEstilo" style="width:100%;padding:11px 13px;border-radius:13px;border:1.5px solid var(--crema-3);background:var(--crema);font-size:15px">
+          <option value="bota">Botita</option>
+          <option value="botin">Botín</option>
+          <option value="sandalia">Sandalia</option>
+          <option value="deportiva">Zapatilla deportiva</option>
+          <option value="casa">Zapatilla de casa</option>
+          <option value="bailarina">Bailarina</option>
+          <option value="zapato">Zapato</option>
+          <option value="generico">Zapatilla</option>
+        </select></label>
+
+      <label class="campo"><span>Talla máxima de la tabla</span>
+        <select id="fMax" style="width:100%;padding:11px 13px;border-radius:13px;border:1.5px solid var(--crema-3);background:var(--crema);font-size:15px"></select></label>
+
+      <div class="botones">
+        <button class="btn primario" id="btnGuardar">Guardar en el catálogo</button>
+        <button class="btn crema" id="btnCopiar">Copiar texto</button>
+        <button class="btn ghost" id="btnImprimir">Imprimir / PDF</button>
+      </div>
+    </div>
+
+    <!-- ---------- Ficha ---------- -->
+    <div class="ficha" id="fichaImprimible">
+      <span class="sello">Barefoot</span>
+      <span class="cinta">Royale Cordonets · Gandia</span>
+      <h2 id="vNombre">—</h2>
+      <div class="sub" id="vSubtitulo">—</div>
+
+      <div class="imagen" id="vImagenWrap" style="display:none"><img id="vImagen" alt=""></div>
+
+      <h4>Para las mamás y papás</h4>
+      <div id="vDescripcion"></div>
+
+      <h4>Por qué le va a sentar tan bien</h4>
+      <ul class="beneficios" id="vBeneficios"></ul>
+
+      <h4>Tabla de tallas (largo interior del pie)</h4>
+      <table class="tallas" id="vTabla">
+        <thead><tr><th>Talla EU</th><th>Largo interior</th><th>Ancho</th><th>Edad orientativa</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h4>Materiales y cuidados</h4>
+      <div class="chips" id="vMateriales"></div>
+
+      <h4>Ideal para</h4>
+      <div class="chips" id="vKeywords"></div>
+
+      <div class="pie">
+        <span>Royale Cordonets · Gandia (Valencia)</span>
+        <span>Medidas orientativas: mide el pie de talón a dedo más largo y añade 0,7 cm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Catálogo ---------- -->
+  <section class="catalogo">
+    <h3>Catálogo guardado <small id="cuenta" style="font-size:13px;color:var(--tinta-2);font-weight:400"></small></h3>
+    <div class="fichas" id="catalogo"></div>
+    <div class="botones">
+      <button class="btn crema" id="btnExportar" disabled>Descargar catálogo (JSON)</button>
+      <button class="btn ghost" id="btnVaciar" disabled>Vaciar catálogo</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
